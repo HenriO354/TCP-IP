@@ -53,6 +53,11 @@ which one of TCP/IP model layer they refer to.
     <td><center>(IP-v4/IP-v6)/ARP</td>
     
   </tr>
+   <tr>
+    <td><center>Layer-1</td>
+    <td><center>ETHERNET/TOKEN RING</td>
+    
+  </tr>
 </table><br>
 
 + Explain how a connection gets established, in other words, explain the "3-way handshake" process?
