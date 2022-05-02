@@ -1,6 +1,7 @@
 #   <center>TCP-IP</centre><br><br>
-+   What are the differences between the OSI model and the TCP/IP model?
++   What are the differences between the OSI model and the TCP/IP model? 
 
+![](assets/images/tcp-vs-osi.webp)
 + How many layers do these two models have?
 
 + What do the acronyms TCP and IP refer to?
