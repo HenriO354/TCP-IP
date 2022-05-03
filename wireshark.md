@@ -3,8 +3,8 @@
    Analyse a suspicious piece of network traffic captured in pcap file.
 
 
-+ Which systems (i.e. IP addresses) are involved?
-
++ Which systems (i.e. IP addresses) are involved?<br>
+ip: source: 98.114.205.102<br>     destination: 192.150.11.111
 ![This is an image](/assets/images/ip-source-destination.png)
 
 
@@ -21,6 +21,8 @@
 
 
 + How many TCP sessions are contained in the dump file?
+
+
 + How long did it take to perform the attack?
 + Which operating system was targeted by the attack? And which service?
 + Which vulnerability?
