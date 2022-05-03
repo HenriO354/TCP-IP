@@ -199,7 +199,7 @@ There are <b>65,535 TCP ports</b>
 
 + What are the three main categories of TCP Ports (with there associated range)?
 
-![relative_sequence_numbers](assets/images/Categories_tcp_range_ports.png)
+![Categories_tcp_range_ports](assets/images/Categories_tcp_range_ports.png)
 
 + Provide three examples of well-know port numbers and tell to which Application layer protocol they refer to.
 <table style="width:100%">
@@ -237,3 +237,67 @@ There are <b>65,535 TCP ports</b>
 
 #  Explain the concept of TCP packets and how they are build over the layer flow.
 
+
+![How%20APacketTravelsThrough-TCP-IP%20Stack](assets/images/How%20APacketTravelsThrough-TCP-IP%20Stack.gif)
+
+##  Application Layer--User Initiates Communication
+
+The packet's history begins when a user on one host sends a message or issues a command that must access a remote host. The application protocol associated with the command or message formats the packet so that it can be handled by the appropriate transport layer protocol, TCP or UDP.
+
+Suppose the user issues an rlogin command to log in to the remote host, as shown in Figure 4-1. The rlogin command uses the TCP transport layer protocol. TCP expects to receive data in the form of a stream of bytes containing the information in the command. Therefore, rlogin sends this data as a TCP stream.
+
+Not all application layer protocols use TCP, however. Suppose a user wants to mount a file system on a remote host, thus initiating the NIS+ application layer protocol. NIS+ uses the UDP transport layer protocol. Therefore, the packet containing the command must be formatted in a manner that UDP expects. This type of packet is referred to as a message.
+
+##  Transport Layer--Data Encapsulation Begins
+
+When the data arrives at the transport layer, the protocols at the layer start the process of data encapsulation. The end result depends on whether TCP or UDP has handled the information.
+
+##  TCP Segmentation
+
+TCP is often called a "connection-oriented" protocol because it ensures the successful delivery of data to the receiving host. Figure 4-1 shows how the TCP protocol receives the stream from the rlogin command. TCP divides the data received from the application layer into segments and attaches a header to each segment.
+
+Segment headers contain sender and recipient ports, segment ordering information, and a data field known as a checksum. The TCP protocols on both hosts use the checksum data to determine whether data has transferred without error.
+
+##  Establishing a TCP Connection
+
+TCP uses segments to determine whether the receiving host is ready to receive the data. When the sending TCP wants to establish connections, it sends a segment called a SYN to the peer TCP protocol running on the receiving host. The receiving TCP returns a segment called an ACK to acknowledge the successful receipt of the segment. The sending TCP sends another ACK segment, then proceeds to send the data. This exchange of control information is referred to as a three-way handshake.
+
+##  UDP Packets
+
+UDP is a "connectionless" protocol. Unlike TCP, it does not check to make sure that data arrived at the receiving host. Instead, UDP takes the message received from the application layer and formats it into UDP packets. UDP attaches a header to each packet, which contains the sending and receiving host ports, a field with the length of the packet, and a checksum.
+
+The sending UDP process attempts to send the packet to its peer UDP process on the receiving host. The application layer determines whether the receiving UDP process acknowledges that the packet was received. UDP requires no notification of receipt. UDP does not use the three-way handshake.
+
+##  Internet Layer
+
+As shown in Figure 4-1, both TCP and UDP pass their segments and packets down to the Internet layer, where they are handled by the IP protocol. IP prepares them for delivery by formatting them into units called IP datagrams. IP then determines the IP addresses for the datagrams, so they can be delivered effectively to the receiving host.
+
+##  IP Datagrams
+
+IP attaches an IP header to the segment or packet's header in addition to the information added by TCP or UDP. Information in the IP header includes the IP addresses of the sending and receiving hosts, datagram length, and datagram sequence order. This information is provided in case the datagram exceeds the allowable byte size for network packets and must be fragmented.
+
+##  Data-Link Layer--Framing Takes Place
+
+Data-link layer protocols, such as PPP, format the IP datagram into a frame. They attach a third header and a footer to "frame" the datagram. The frame header includes a cyclical redundancy check (CRC) field that checks for errors as the frame travels over the network media. Then the data-link layer passes the frame to the physical layer.
+
+##  Physical Network Layer--Preparing the Frame for Transmission
+
+The physical network layer on the sending host receives the frames and converts the IP addresses into the hardware addresses appropriate to the network media. The physical network layer then sends the frame out over the network media.
+
+##  How the Receiving Host Handles the Packet
+
+When the packet arrives on the receiving host, it travels through the TCP/IP protocol stack in the reverse order from that which it took on the sender. Figure 4-1 illustrates this path. Moreover, each protocol on the receiving host strips off header information attached to the packet by its peer on the sending host. Here is what happens:
+
+1.  Physical Network Layer receives the packet in its frame form. It computes the CRC of the packet, then sends the frame to the data link layer.
+
+2.    Data-Link Layer verifies that the CRC for the frame is correct and strips off the frame header and CRC. Finally, the data link protocol sends the frame to the Internet layer.
+
+3.    Internet Layer reads information in the header to identify the transmission and determine if it is a fragment. If the transmission was fragmented, IP reassembles the fragments into the original datagram. It then strips off the IP header and passes the datagram on to transport layer protocols.
+
+4.    Transport Layer (TCP and UDP) reads the header to determine which application layer protocol must receive the data. Then TCP or UDP strips off its related header and sends the message or stream up to the receiving application.
+
+5.    Application Layer receives the message and performs the operation requested by the sending host.
+
+##  TCP/IP Internal Trace Support
+
+TCP/IP provides internal trace support by logging TCP communication when a connection is terminated by an RST packet. When an RST packet is transmitted or received, information on as many as 10 packets, which were transmitted or received immediately before on that connection, is logged with the connection information.
