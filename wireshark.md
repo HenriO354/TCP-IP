@@ -4,7 +4,7 @@
 
 
 + Which systems (i.e. IP addresses) are involved?
-
+![This is an image](/assets/images/ip-source-destination.png)
 
 
 + What can you find out about the attacking host (e.g., where is it located)?
