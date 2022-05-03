@@ -42,19 +42,19 @@ which one of TCP/IP model layer they refer to.
     <th><center>Protocols</th>
   </tr>
   <tr>
-    <td><center>Layer-4</td>
+    <td><center>4</td>
     <td><center>HTTP/RDP/SSH/SMTP</td> 
   <tr>
-    <td><center>Layer-3</td>
+    <td><center>3</td>
     <td><center>TCP/UDP</td>
   </tr>
   <tr>
-    <td><center>Layer-2</td>
+    <td><center>2</td>
     <td><center>(IP-v4/IP-v6)/ARP</td>
     
   </tr>
    <tr>
-    <td><center>Layer-1</td>
+    <td><center>1</td>
     <td><center>ETHERNET/TOKEN RING</td>
     
   </tr>
@@ -91,17 +91,148 @@ In the final step, the TCP, who received the final FIN flag, will be sending an 
 
 For a better understanding, you can take a look at the diagram below:
 
-![3ways-handshake-2](assets/images)
+![The4-WayHandshakeProcess](assets/images/The4-WayHandshakeProcess.png)
 
 + Explain what are the "sequence number" and "acknowledgment number" in TCP.
 
+The client on either side of a TCP session maintains a 32-bit sequence number it uses to keep track of how much data it has sent. This sequence number is included on each transmitted packet, and acknowledged by the opposite host as an acknowledgement number to inform the sending host that the transmitted data was received successfully.
+
+When a host initiates a TCP session, its initial sequence number is effectively random; it may be any value between 0 and 4,294,967,295, inclusive. However, protocol analyzers like Wireshark will typically display relative sequence and acknowledgement numbers in place of the actual values. 
+These numbers are relative to the initial sequence number of that stream. This is handy, as it is much easier to keep track of relatively small, predictable numbers rather than the actual numbers sent on the wire.
+
+For example, the initial relative sequence number shown in packet #1 is 0 (naturally), while the ASCII decode in the third pane shows that the actual sequence number is 0xf61c6cbe, or 4129057982 decimal.
+
+![relative_sequence_numbers](assets/images/relative_sequence_numbers.png)
+
+To better understand how sequence and acknowledgement numbers are used throughout the duration of a TCP session, we can utilize Wireshark's built-in flow graphing ability. Navigate to Statistics > Flow Graph..., select TCP flow and click OK. 
+Wireshark automatically builds a graphical summary of the TCP flow.
+
+![tcp_flow.png](assets/images/tcp_flow.png)
+
+We can use this flow graph to better understand how sequence and acknowledgement numbers work.
+
+Packet #1
+
+Each side of a TCP session starts out with a (relative) sequence number of zero. Likewise, the acknowledgement number is also zero, as there is not yet a complementary side of the conversation to acknowledge.
+
+(Note: The version of Wireshark used for this demonstration, 1.2.7, shows the acknowledgement number as an apparently random number. This believed to be a software bug; the initial acknowledgement number of a session should always be zero, as you can see from inspecting the hex dump of the packet.)
+
+Packet #2
+
+The server responds to the client with a sequence number of zero, as this is its first packet in this TCP session, and a relative acknowledgement number of 1. The acknowledgement number is set to 1 to indicate the receipt of the client's SYN flag in packet #1.
+
+Notice that the acknowledgement number has been increased by 1 although no payload data has yet been sent by the client. This is because the presence of the SYN or FIN flag in a received packet triggers an increase of 1 in the sequence. (This does not interfere with the accounting of payload data, because packets with the SYN or FIN flag set do not carry a payload.)
+
+Packet #3
+
+Like in packet #2, the client responds to the server's sequence number of zero with an acknowledgement number of 1. The client includes its own sequence number of 1 (incremented from zero because of the SYN).
+
+At this point, the sequence number for both hosts is 1. This initial increment of 1 on both hosts' sequence numbers occurs during the establishment of all TCP sessions.
+
+Packet #4
+
+This is the first packet in the stream which carries an actual payload (specifically, the client's HTTP request). The sequence number is left at 1, since no data has been transmitted since the last packet in this stream. The acknowledgement number is also left at 1, since no data has been received from the server, either.
+
+Note that this packet's payload is 725 bytes in length.
+
+Packet #5
+
+This packet is sent by the server solely to acknowledge the data sent by the client in packet #4 while upper layers process the HTTP request. Notice that the acknowledgement number has increased by 725 (the length of the payload in packet #4) to 726; e.g., "I have received 726 bytes so far." The server's sequence number remains at 1.
+
+Packet #6
+
+This packet marks the beginning of the server's HTTP response. Its sequence number is still 1, since none of its packets prior to this one have carried a payload. This packet carries a payload of 1448 bytes.
+
+Packet #7
+
+The sequence number of the client has been increased to 726 because of the last packet it sent. Having received 1448 bytes of data from the server, the client increases its acknowledgement number from 1 to 1449.
+
+For the majority of the capture, we will see this cycle repeat. The client's sequence number will remain steady at 726, because it has no data to transmit beyond the initial 725 byte request. The server's sequence number, in contrast, continues to grow as it sends more segments of the HTTP response.
+
 + What is the fundamental difference between TCP and UDP ?
 
-+ What are TCP ports? How many of them are they?
+    The speed for TCP is slower while the speed of UDP is faster
+<table style="width:100%">
+  <tr>
+    <th><center>TCP</th>
+    <th><center>UDP</th>
+  </tr>
+  <tr>
+    <td><center>It is a connection-oriented protocol.</td>
+    <td><center>It is a connectionless protocol.</td> 
+  <tr>
+    <td><center>Rearranges data packets in the specific order</td>
+    <td><center>UDP protocol has no fixed order because all packets are independent of each other.</td>
+  </tr>
+  <tr>
+    <td><center>Header size is 20 bytes</td>
+    <td><center>Header size is 8 bytes.</td>
+    
+  </tr>
+   <tr>
+    <td><center>Acknowledgment segments</td>
+    <td><center>NO Acknowledgment segments</td>
+    
+  </tr>
+  <tr>
+    <td><center>Using handshake protocol like SYN, SYN-ACK, ACK</td>
+    <td><center>NO handshake <br>(so connectionless protocol)</td>
+    
+  </tr>
+  <tr>
+    <td><center>Acknowledgment segments</td>
+    <td><center>NO Acknowledgment segments</td>
+    
+  </tr>
+</table>
+<br>
+    
+#   What are TCP ports? How many of them are they?
+
+ A "port" is a logical distinction in computer networking. Ports are numbered and used as global standards to identify specific processes or types of network services.
+
+Much like before shipping something to a foreign country, you'd agree where you'd be shipping out of and where you'd have it arriving, TCP ports allow for standardized communication between devices. One device can receive information for many different processes and services, and which port the information flows on helps to keep it organized.    
+There are <b>65,535 TCP ports</b>
+<br>
+
+<a href="https://www.youtube.com/watch?v=ROuoU9qZSKQ&t=6s" title="Link Title">"What is a TCP port ?"</a>
 
 + What are the three main categories of TCP Ports (with there associated range)?
 
-+ Provide three examples of well-know port numbers and tell to which Application layer protocol they refer to.
 
+
++ Provide three examples of well-know port numbers and tell to which Application layer protocol they refer to.
+<table style="width:100%">
+
+  <tr>
+  <th></th>
+    <th><center>WELL KNOWN PORTS</th>
+    <th><center>==></th>
+    <th><center>APPLICATION LAYER PROTOCOL</th>
+    
+    
+  </tr>
+  <tr>
+  <td></td>
+    <td><center>21 </td>
+    <td><center></td>
+    <td><center>FTP</td>
+    
+  <tr>
+  <td></td>
+    <td><center>443</td>
+    <td><center></td>
+    <td><center>HyperText Transfer Protocol over SSL/TLS (HTTPS) </td>
+  
+  </tr>
+  <tr>
+  <td></td>
+    <td><center>989<port:656</td>
+    <td><center></td>
+    <td><center> Secure FTP (SFTP) </td>
+
+
+</table>
+<br>
 + Explain the concept of TCP packets and how they are build over the layer flow.
 
