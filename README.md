@@ -199,7 +199,7 @@ There are <b>65,535 TCP ports</b>
 
 + What are the three main categories of TCP Ports (with there associated range)?
 
-
+![relative_sequence_numbers](assets/images/Categories_tcp_range_ports.png)
 
 + Provide three examples of well-know port numbers and tell to which Application layer protocol they refer to.
 <table style="width:100%">
@@ -234,5 +234,6 @@ There are <b>65,535 TCP ports</b>
 
 </table>
 <br>
-+ Explain the concept of TCP packets and how they are build over the layer flow.
+
+#  Explain the concept of TCP packets and how they are build over the layer flow.
 
