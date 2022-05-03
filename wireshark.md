@@ -12,7 +12,7 @@
 
    When a host is infected or otherwise compromised, security professionals need to quickly review packet captures (pcaps) of suspicious network traffic to identify affected hosts and users.
 
-This tutorial offers tips on how to gather that pcap data using Wireshark, the widely used network protocol analysis tool. It assumes you understand network traffic fundamentals and will use these pcaps of IPv4 traffic to cover retrieval of four types of data:
+   This tutorial offers tips on how to gather that pcap data using Wireshark, the widely used network protocol analysis tool. It assumes you understand network traffic fundamentals and will use these pcaps of IPv4 traffic to cover retrieval of four types of data:
 
       1) Host information from DHCP traffic
       2) Host information from NetBIOS Name Service (NBNS) traffic
