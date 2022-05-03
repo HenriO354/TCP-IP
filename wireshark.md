@@ -21,8 +21,8 @@ ip: source: 98.114.205.102<br>     destination: 192.150.11.111
 
 
 + How many TCP sessions are contained in the dump file?
-
-
+![This is an image](/assets/images/conversations.png)
+There are 5 conversation on the run.
 + How long did it take to perform the attack?
 + Which operating system was targeted by the attack? And which service?
 + Which vulnerability?
