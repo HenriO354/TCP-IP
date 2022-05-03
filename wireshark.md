@@ -10,7 +10,7 @@
 
 + What can you find out about the attacking host (e.g., where is it located)?
 
-When a host is infected or otherwise compromised, security professionals need to quickly review packet captures (pcaps) of suspicious network traffic to identify affected hosts and users.
+   When a host is infected or otherwise compromised, security professionals need to quickly review packet captures (pcaps) of suspicious network traffic to identify affected hosts and users.
 
 This tutorial offers tips on how to gather that pcap data using Wireshark, the widely used network protocol analysis tool. It assumes you understand network traffic fundamentals and will use these pcaps of IPv4 traffic to cover retrieval of four types of data:
 
