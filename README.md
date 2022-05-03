@@ -62,16 +62,36 @@ which one of TCP/IP model layer they refer to.
 
 + Explain how a connection gets established, in other words, explain the "3-way handshake" process?
 
-![](assets/images/3ways-handshake-2.png)<br>
+![3ways-handshake-2](assets/images/3ways-handshake-2.png)<br>
 3 way Handshake Diagram
 
-    Step 1: In the first step,	the client establishes a connection with a server. It sends a segment with SYN and informs the server about the client should start communication, and with what should be its sequence number.
+Step 1: In the first step,	the client establishes a connection with a server. It sends a segment with SYN and informs the server about the client should start communication, and with what should be its sequence number.
 
-    Step 2: In this step server responds to the client request with SYN-ACK signal set. ACK helps you to signify the response of segment that is received and SYN signifies what sequence number it should able to start with the segments.
-    
-    Step 3: In this final step, the client acknowledges the response of the Server, and they both create a stable connection will begin the actual data transfer process.
+Step 2: In this step server responds to the client request with SYN-ACK signal set. ACK helps you to signify the response of segment that is received and SYN signifies what sequence number it should able to start with the segments.
+
+Step 3: In this final step, the client acknowledges the response of the Server, and they both create a stable connection will begin the actual data transfer process.
 
 + Explain how a connection is terminated, in other words, explain the "4-way disconnect" process?
+
+to terminate an established TCP connection, the following 4 TCP packets are needed to be exchanged. Which you can understand with the statements below:
+
+1. Host A → Host B: FIN flag set.
+2. Host B → Host A: ACK flag set.
+3. Host B → Host A: FIN flag set.
+4. Host A → Host B: ACK flag set.
+
+These 4 steps are known as a TCP 4-way handshake, which is necessary to terminate a TCP connection. For the termination of the established TCP connection, the following steps are necessary for the process. Which are given down below:
+
+Firstly, from one side of the connection, either from the client or the server the FIN flag will be sent as the request for the termination of the connection.
+
+In the second step, whoever receives the FIN flag will then be sending an ACK flag as the acknowledgment for the closing request to the other side.
+
+And, at the Later step, the server will also send a FIN flag as the closing signal to the other side.
+In the final step, the TCP, who received the final FIN flag, will be sending an ACK flag as the final Acknowledgement for the suggested connection closing.
+
+For a better understanding, you can take a look at the diagram below:
+
+![3ways-handshake-2](assets/images)
 
 + Explain what are the "sequence number" and "acknowledgment number" in TCP.
 
